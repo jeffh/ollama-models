@@ -54,6 +54,6 @@ onepassword-read
     -secret-reference '{{.OP_HF_TOKEN_REFERENCE}}'
 file -path ~/.env
     -perm 600
-    -content 'HF_TOKEN={{.hfToken}}'
+    -content 'export HF_TOKEN={{.hfToken}}'
 
 run -cd ollama-models -e "chmod +x ./build.sh" -e "/bin/bash -c 'source ~/.env && ./build.sh'" -p

@@ -21,9 +21,9 @@ docker build -t ${IMAGE_NAME} . || exitError "failed to build converter"
 popd
 
 docker rm "${CONTAINER_NAME}" 2>/dev/null >/dev/null
-docker run -e HF_TOKEN -it --name "${CONTAINER_NAME}" "${IMAGE_NAME}" $@
+docker run -e HF_TOKEN -i --name "${CONTAINER_NAME}" "${IMAGE_NAME}" $@
 if [[ $? -ne 0 ]]; then
     exitError "failed to convert hf models: $@"
 fi
 
-docker cp "${CONTAINER_NAME}:/models/." "./models" || exitError "failed to copy over converted models"
+docker cp "${CONTAINER_NAME}:/models/." "./modelfiles/models" || exitError "failed to copy over converted models"

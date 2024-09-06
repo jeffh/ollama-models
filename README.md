@@ -11,7 +11,22 @@ curl -vvvv -H 'Content-Type: application/json' "http://localhost:11434/v1/embedd
 
 Where `model` can also include the tag as necessary (such as `jeffh/intfloat-multilingual-e5-large:f16`)
 
-**NOTE** as per e5-large, you should prefix your text with `query: ` or `passage: ` as appropriate.
+## Model Notes
+
+### e5 large
+
+You should prefix your text with `query: ` or `passage: ` for queries and document indexing.
+
+### e5 large instruct
+
+You should use the structure for queries:
+
+```
+Instruct: {task_description}
+Query: {query}
+```
+
+Documents do not need any special structure to be embedded for indexing.
 
 # Links
 

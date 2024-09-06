@@ -1,4 +1,4 @@
-FROM ./models/multilingual-e5-large-559M-F16.gguf
+FROM ../models/intfloat-multilingual-e5-large-F16.gguf
 
 LICENSE """MIT LICENSE
 

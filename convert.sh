@@ -26,4 +26,4 @@ if [[ $? -ne 0 ]]; then
     exitError "failed to convert hf models: $@"
 fi
 
-docker cp "${CONTAINER_NAME}:/models/." "./modelfiles/models" || exitError "failed to copy over converted models"
+docker cp "${CONTAINER_NAME}:/models/." "./models" || exitError "failed to copy over converted models"

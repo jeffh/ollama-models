@@ -1,0 +1,7 @@
+-state dev.state
+arg -type string -required "DO_API_TOKEN"
+do-login
+    -token '{{.DO_API_TOKEN}}'
+do-machine
+    -id "machine"
+    -remove

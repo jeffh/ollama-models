@@ -14,5 +14,5 @@ do-machine
     -size s-4vcpu-16gb-amd
     -name "llm-builder"
     -id "machine"
-apply -ssh "root@{{.machine.FirstPublicNetweorkV4.Address}}"
+apply -ssh "root@{{.machine.FirstPublicNetworkV4.Address}}"
     -f do-setup.txt

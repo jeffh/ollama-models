@@ -1,4 +1,5 @@
 arg -type string -required "OP_HF_TOKEN_REFERENCE" -default "op://Private/Hugging Face/access token"
+arg -type string -optional "OP_SSH_SECRET_REFERENCE" -default "op://Private/VM Github SSH Key/private key"
 arg -type string -required "OP_OLLAMA_SECRET_REFERENCE" -default "op://Private/VM Ollama SSH Key/private key"
 arg -type string -required "OP_OLLAMA_PUBLIC_REFERENCE" -default "op://Private/VM Ollama SSH Key/public key"
 
@@ -12,6 +13,8 @@ system
     -apt-pkg-add vim
     -apt-pkg-add btop
     -apt-pkg-add mosh
+pack
+    -name Docker
 onepassword-use -local
 onepassword-read
     -var "ollamaSshPrivateKey"
@@ -22,16 +25,23 @@ file -path ~/.ollama/id_ed25519
 onepassword-read
     -var "ollamaSshPublicKey"
     -secret-reference '{{.OP_OLLAMA_PUBLIC_REFERENCE}}'
-file -path ~/.ollama/id_ed25519
+file -path ~/.ollama/id_ed25519.pub
     -perm 0600
     -content '{{.ollamaSshPublicKey}}'
+
+onepassword-read
+    -var "gitSshKey"
+    -secret-reference '{{.OP_SSH_SECRET_REFERENCE}}'
+file -path ~/.ssh/id_ed25519
+    -perm 0600
+    -content '{{.gitSshKey}}'
 
 file -dir -path "/opt"
     -perm 0755
 file -content-from "https://ollama.com/install.sh"
     -path "/opt/ollama-install.sh"
     -perm "0755"
-run -e "sh /opt/ollama-install.sh"
+run -e "sh /opt/ollama-install.sh" -p -when "hash ollama"
 ssh-keyscan
     -host github.com
 git-clone
@@ -46,4 +56,4 @@ file -path ~/.env
     -perm 600
     -content 'HF_TOKEN={{.hfToken}}'
 
-run -cd ollama-models -e "/bin/bash -c 'source ~/.env && ./build.sh'"
+run -cd ollama-models -e "chmod +x ./build.sh" -e "/bin/bash -c 'source ~/.env && ./build.sh'" -p

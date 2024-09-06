@@ -1,0 +1,49 @@
+arg -type string -required "OP_HF_TOKEN_REFERENCE" -default "op://Private/Hugging Face/access token"
+arg -type string -required "OP_OLLAMA_SECRET_REFERENCE" -default "op://Private/VM Ollama SSH Key/private key"
+arg -type string -required "OP_OLLAMA_PUBLIC_REFERENCE" -default "op://Private/VM Ollama SSH Key/public key"
+
+system
+    -apt-update
+    -apt-upgrade
+    -apt-pkg-add ca-certificates
+    -apt-pkg-add git-core
+    -apt-pkg-add make
+    -apt-pkg-add tmux
+    -apt-pkg-add vim
+    -apt-pkg-add btop
+    -apt-pkg-add mosh
+onepassword-use -local
+onepassword-read
+    -var "ollamaSshPrivateKey"
+    -secret-reference '{{.OP_OLLAMA_SECRET_REFERENCE}}'
+file -path ~/.ollama/id_ed25519
+    -perm 0600
+    -content '{{.ollamaSshPrivateKey}}'
+onepassword-read
+    -var "ollamaSshPublicKey"
+    -secret-reference '{{.OP_OLLAMA_PUBLIC_REFERENCE}}'
+file -path ~/.ollama/id_ed25519
+    -perm 0600
+    -content '{{.ollamaSshPublicKey}}'
+
+file -dir -path "/opt"
+    -perm 0755
+file -content-from "https://ollama.com/install.sh"
+    -path "/opt/ollama-install.sh"
+    -perm "0755"
+run -e "sh /opt/ollama-install.sh"
+ssh-keyscan
+    -host github.com
+git-clone
+    -dst ollama-models
+    -src 'git@github.com:jeffh/ollama-models.git'
+    -ssh-key ~/.ssh/id_ed25519
+
+onepassword-read
+    -var "hfToken"
+    -secret-reference '{{.OP_HF_TOKEN_REFERENCE}}'
+file -path ~/.env
+    -perm 600
+    -content 'HF_TOKEN={{.hfToken}}'
+
+run -cd ollama-models -e "/bin/bash -c 'source ~/.env && ./build.sh'"

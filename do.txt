@@ -1,0 +1,18 @@
+-state dev.state
+
+arg -type string -required "DO_API_TOKEN"
+do-login
+    -token '{{.DO_API_TOKEN}}'
+do-sshkey
+    -id "sshKey"
+    -import '{{env "DO_SSH_KEY_ID"}}'
+do-machine
+    -add-ssh-key-id '{{.sshKey.ID}}'
+    -image ubuntu-24-04-x64
+    -region nyc3
+    -vpc "default-nyc3"
+    -size s-4vcpu-16gb-amd
+    -name "llm-builder"
+    -id "machine"
+apply -ssh "root@{{.machine.FirstPublicNetweorkV4.Address}}"
+    -f do-setup.txt

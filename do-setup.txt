@@ -41,7 +41,7 @@ file -dir -path "/opt"
 file -content-from "https://ollama.com/install.sh"
     -path "/opt/ollama-install.sh"
     -perm "0755"
-run -e "sh /opt/ollama-install.sh" -p -when "hash ollama"
+run -e "sh /opt/ollama-install.sh" -p
 ssh-keyscan
     -host github.com
 git-clone

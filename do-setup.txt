@@ -16,18 +16,6 @@ system
 pack
     -name Docker
 onepassword-use -local
-onepassword-read
-    -var "ollamaSshPrivateKey"
-    -secret-reference '{{.OP_OLLAMA_SECRET_REFERENCE}}'
-file -path ~/.ollama/id_ed25519
-    -perm 0600
-    -content '{{.ollamaSshPrivateKey}}'
-onepassword-read
-    -var "ollamaSshPublicKey"
-    -secret-reference '{{.OP_OLLAMA_PUBLIC_REFERENCE}}'
-file -path ~/.ollama/id_ed25519.pub
-    -perm 0600
-    -content '{{.ollamaSshPublicKey}}'
 
 onepassword-read
     -var "gitSshKey"
@@ -42,7 +30,23 @@ file -content-from "https://ollama.com/install.sh"
     -path "/opt/ollama-install.sh"
     -perm "0755"
 run -e "sh /opt/ollama-install.sh" -p
-run -e "systemctl start ollama"
+
+onepassword-read
+    -var "ollamaSshPrivateKey"
+    -secret-reference '{{.OP_OLLAMA_SECRET_REFERENCE}}'
+file -path /usr/share/ollama/.ollama/id_ed25519
+    -path ~/.ollama/id_ed25519
+    -perm 0600
+    -content '{{.ollamaSshPrivateKey}}'
+onepassword-read
+    -var "ollamaSshPublicKey"
+    -secret-reference '{{.OP_OLLAMA_PUBLIC_REFERENCE}}'
+file -path /usr/share/ollama/.ollama/id_ed25519.pub
+    -path ~/.ollama/id_ed25519.pub
+    -perm 0600
+    -content '{{.ollamaSshPublicKey}}'
+
+run -e "systemctl restart ollama"
 ssh-keyscan
     -host github.com
 git-clone

@@ -10,6 +10,4 @@ RUN pip install huggingface_hub
 COPY download.sh download.sh
 RUN mkdir /models
 
-ENV HF_TOKEN=""
-
 ENTRYPOINT ["./download.sh"]

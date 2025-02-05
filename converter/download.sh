@@ -25,7 +25,7 @@ do
         huggingface-cli download "${HF_MODEL}" --local-dir "${DL_DIR}" || error "failed to download model: $HF_MODEL"
     fi
 
-    python llama.cpp/convert_hf_to_gguf_update.py "${HF_TOKEN}" || error "failed to fetch tokenizers
+    python llama.cpp/convert_hf_to_gguf_update.py "${HF_TOKEN}" || error "failed to fetch tokenizers"
 
     # format can be one of: f32,f16,bf16,q8_0,tq1_0,tq2_0,auto
     # but auto may produce bf16, which is not common among all hardware

@@ -1,4 +1,4 @@
-FROM ../models/intfloat-e5-base-v2-F32.gguf
+FROM ../models/intfloat-e5-base-v2-109M-F32.gguf
 
 LICENSE """MIT LICENSE
 

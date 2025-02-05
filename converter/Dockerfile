@@ -12,4 +12,6 @@ RUN pip install huggingface_hub
 COPY download.sh download.sh
 RUN mkdir /models
 
-ENTRYPOINT ["./download.sh"]
+WORKDIR /workspace/llama.cpp
+
+ENTRYPOINT ["/workspace/download.sh"]
